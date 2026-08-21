@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,8 +15,8 @@
   <main class="page">
 
     <div class="lang" role="group" aria-label="Language">
-      <button type="button" class="lang-btn" data-lang="en">English</button>
       <button type="button" class="lang-btn" data-lang="ko">한국어</button>
+      <button type="button" class="lang-btn" data-lang="en">English</button>
     </div>
 
     <div class="page-icon">🙏</div>
@@ -61,9 +61,23 @@
     <section class="output" id="outputCard" hidden>
       <div class="output-head">
         <h2 data-i18n="output"></h2>
-        <button type="button" id="copyBtn" class="btn ghost sm" data-i18n="copy"></button>
+        <div class="output-tools">
+          <button type="button" id="pdfBtn" class="btn ghost sm" data-i18n="pdf"></button>
+          <button type="button" id="copyBtn" class="btn primary sm" data-i18n="copy"></button>
+        </div>
       </div>
       <pre id="output"></pre>
+    </section>
+
+    <section class="note">
+      <div class="note-head">
+        <h2 data-i18n="noteTitle"></h2>
+        <button type="button" id="noteCopyBtn" class="btn ghost sm" data-i18n="copy"></button>
+      </div>
+      <div class="callout">
+        <span class="callout-icon">💬</span>
+        <pre id="noteText"></pre>
+      </div>
     </section>
 
   </main>

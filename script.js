@@ -13,7 +13,11 @@
       submit: "만들기",
       output: "결과",
       copy: "복사",
+      pdf: "PDF로 저장",
       remove: "삭제",
+      noteTitle: "안내 문구",
+      note: "오늘 못 오신 분들도 기도제목 있으시면 여기에 남겨주세요!\nPlease leave your prayer request here if you weren\u2019t here today!\n(수정해야할 부분 있으면 알려주세요…)",
+      pdfName: "기도제목",
       phName: "홍길동",
       phRequest: "기도제목을 입력하세요",
       copied: "복사했습니다",
@@ -32,7 +36,11 @@
       submit: "Submit",
       output: "Output",
       copy: "Copy",
+      pdf: "Save as PDF",
       remove: "Remove",
+      noteTitle: "Invitation Note",
+      note: "Please leave your prayer request here if you weren\u2019t here today!\n(Let me know if anything needs to be fixed…)",
+      pdfName: "Prayer Request",
       phName: "John Doe",
       phRequest: "Write the prayer request",
       copied: "Copied",
@@ -47,13 +55,16 @@
   var addBtn = document.getElementById("addBtn");
   var submitBtn = document.getElementById("submitBtn");
   var copyBtn = document.getElementById("copyBtn");
+  var pdfBtn = document.getElementById("pdfBtn");
+  var noteEl = document.getElementById("noteText");
+  var noteCopyBtn = document.getElementById("noteCopyBtn");
   var outputCard = document.getElementById("outputCard");
   var outputEl = document.getElementById("output");
   var dateInput = document.getElementById("dateInput");
   var toastEl = document.getElementById("toast");
   var langBtns = document.querySelectorAll(".lang-btn");
 
-  var lang = "en";
+  var lang = "ko";
   function t(key) { return I18N[lang][key]; }
 
   /* ---------- language ---------- */
@@ -78,6 +89,7 @@
       btn.setAttribute("aria-pressed", String(btn.dataset.lang === next));
     });
     document.title = "Neat Prayer";
+    noteEl.textContent = t("note");
 
     if (!outputCard.hidden) {
       var text = buildOutput(true);
@@ -225,9 +237,25 @@
     );
   });
 
+  noteCopyBtn.addEventListener("click", function () {
+    copyText(noteEl.textContent).then(
+      function () { showToast(t("copied")); },
+      function () { showToast(t("copyFail")); }
+    );
+  });
+
+  // The browser's print dialog handles "Save as PDF" — it already renders
+  // Hangul correctly, and document.title becomes the default file name.
+  pdfBtn.addEventListener("click", function () {
+    var restore = document.title;
+    document.title = t("pdfName") + " " + (dateInput.value || todayValue());
+    window.print();
+    setTimeout(function () { document.title = restore; }, 500);
+  });
+
   /* ---------- init ---------- */
 
-  applyLang("en");
+  applyLang("ko");
   dateInput.value = todayValue();
   addPerson(false);
 })();
