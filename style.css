@@ -313,6 +313,49 @@ pre#output {
   padding: 16px 18px;
 }
 
+.output-tools { display: flex; gap: 6px; }
+
+/* ---- note callout ---- */
+.note {
+  margin-top: 34px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.note-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.note-head h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray);
+}
+
+.callout {
+  display: flex;
+  gap: 10px;
+  background: var(--hover);
+  border-radius: 3px;
+  padding: 14px 16px;
+}
+
+.callout-icon { font-size: 16px; line-height: 1.6; }
+
+pre#noteText {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--black);
+}
+
 /* ---- toast ---- */
 .toast {
   position: fixed;
@@ -371,4 +414,34 @@ pre#output {
   }
 
   table.grid tfoot td { border-bottom: 1px solid var(--line); }
+}
+
+/* ---- print / save as PDF: the list alone, nothing else ---- */
+@media print {
+  body { background: var(--white); }
+
+  .page { max-width: none; padding: 0; }
+
+  .lang, .page-icon, .page-title, .quote, .prop,
+  .table-wrap, .actions, .output-head, .note, .toast { display: none !important; }
+
+  .output {
+    margin: 0;
+    padding: 0;
+    border-top: none;
+  }
+
+  #outputCard[hidden] { display: none !important; }
+
+  pre#output {
+    background: none;
+    border-left: 2px solid var(--black);
+    border-radius: 0;
+    padding: 0 0 0 14px;
+    font-size: 12pt;
+    line-height: 1.7;
+    color: var(--black);
+  }
+
+  @page { margin: 20mm; }
 }

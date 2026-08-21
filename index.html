@@ -61,9 +61,23 @@
     <section class="output" id="outputCard" hidden>
       <div class="output-head">
         <h2 data-i18n="output"></h2>
-        <button type="button" id="copyBtn" class="btn ghost sm" data-i18n="copy"></button>
+        <div class="output-tools">
+          <button type="button" id="pdfBtn" class="btn ghost sm" data-i18n="pdf"></button>
+          <button type="button" id="copyBtn" class="btn primary sm" data-i18n="copy"></button>
+        </div>
       </div>
       <pre id="output"></pre>
+    </section>
+
+    <section class="note">
+      <div class="note-head">
+        <h2 data-i18n="noteTitle"></h2>
+        <button type="button" id="noteCopyBtn" class="btn ghost sm" data-i18n="copy"></button>
+      </div>
+      <div class="callout">
+        <span class="callout-icon">💬</span>
+        <pre id="noteText"></pre>
+      </div>
     </section>
 
   </main>
