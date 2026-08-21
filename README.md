@@ -12,11 +12,10 @@ No backend, no database — nothing is stored.
 ## Output format
 
 ```
-<Prayer Request 8/16/26>
+<Prayer Requests (8/16/26)>
 
-• 권현: 스스로의 행동과 삶의목표, 그리고 방향성을 하나님께 맞추고 시선을 고정하기를.
-
-• Max 멘토님: 오픈 순예배때 정말로 갈급하고 필요한 사람들을 초대 할 수 있기를.
+• Jihoon: That he would align his actions, life goals, and direction fully with God, keeping his eyes fixed steadfastly on Him.
+• David: That he would truly hunger for justice and peace in the world and devote himself to it wholeheartedly.
 ```
 
 ## Deploy (Netlify)
