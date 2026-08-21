@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NeatPrayer</title>
+  <meta name="description" content="Write a prayer request list and copy it in one tap." />
+  <meta name="color-scheme" content="light" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" class="lang-btn" data-lang="en">English</button>
+      <button type="button" class="lang-btn" data-lang="ko">한국어</button>
+    </div>
+
+    <div class="page-icon">🙏</div>
+    <h1 class="page-title">Neat Prayer</h1>
+    <blockquote class="quote">
+      <p class="tagline" data-i18n="tagline"></p>
+      <p class="subline" data-i18n="subline"></p>
+    </blockquote>
+
+    <div class="prop">
+      <label class="prop-key" for="dateInput" data-i18n="date"></label>
+      <input type="date" id="dateInput" class="prop-value" />
+    </div>
+
+    <div class="table-wrap">
+      <table class="grid">
+        <thead>
+          <tr>
+            <th class="col-no" data-i18n="no"></th>
+            <th class="col-name" data-i18n="name"></th>
+            <th class="col-req" data-i18n="request"></th>
+            <th class="col-del"><span class="sr-only" data-i18n="remove"></span></th>
+          </tr>
+        </thead>
+        <tbody id="people"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <button type="button" id="addBtn" class="row-add">
+                <span class="plus">+</span><span data-i18n="add"></span>
+              </button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="submitBtn" class="btn primary" data-i18n="submit"></button>
+    </div>
+
+    <section class="output" id="outputCard" hidden>
+      <div class="output-head">
+        <h2 data-i18n="output"></h2>
+        <button type="button" id="copyBtn" class="btn ghost sm" data-i18n="copy"></button>
+      </div>
+      <pre id="output"></pre>
+    </section>
+
+  </main>
+
+  <template id="personTemplate">
+    <tr class="person">
+      <td class="col-no"><span class="person-index"></span></td>
+      <td class="col-name" data-label-key="name">
+        <input type="text" class="name" data-ph="phName" autocomplete="off" />
+      </td>
+      <td class="col-req" data-label-key="request">
+        <textarea class="request" rows="1" data-ph="phRequest"></textarea>
+      </td>
+      <td class="col-del">
+        <button type="button" class="remove" data-aria="remove">&times;</button>
+      </td>
+    </tr>
+  </template>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
