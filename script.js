@@ -64,7 +64,7 @@
   var toastEl = document.getElementById("toast");
   var langBtns = document.querySelectorAll(".lang-btn");
 
-  var lang = "en";
+  var lang = "ko";
   function t(key) { return I18N[lang][key]; }
 
   /* ---------- language ---------- */
@@ -255,7 +255,7 @@
 
   /* ---------- init ---------- */
 
-  applyLang("en");
+  applyLang("ko");
   dateInput.value = todayValue();
   addPerson(false);
 })();
