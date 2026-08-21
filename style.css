@@ -415,6 +415,39 @@ pre#noteText {
   }
 
   table.grid tfoot td { border-bottom: 1px solid var(--line); }
+
+  /* iOS zooms the page in when a focused field is under 16px */
+  td input[type="text"],
+  td textarea,
+  input[type="date"] { font-size: 16px; }
+
+  /* thumb-sized tap targets */
+  .lang-btn { padding: 8px 12px; font-size: 14px; }
+  .remove { padding: 12px 8px; font-size: 20px; }
+  .row-add { padding: 14px 8px; font-size: 15px; }
+  td input[type="text"], td textarea { padding: 10px 8px; }
+
+  .btn { padding: 13px 16px; font-size: 16px; }
+  .btn.sm { padding: 12px 14px; font-size: 15px; }
+  .actions .btn { width: 100%; }
+
+  /* three labels will not sit beside the heading on a phone */
+  .output-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .output-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .output-tools .btn.primary { grid-column: 1 / -1; order: -1; }
+
+  .note-head { gap: 10px; }
+  .note-head .btn.sm { flex: 0 0 auto; }
+
+  pre#output, pre#noteText { font-size: 16px; }
+
+  .toast { left: 16px; right: 16px; bottom: 16px; transform: translateY(12px); text-align: center; }
+  .toast.show { transform: translateY(0); }
 }
 
 /* ---- print / save as PDF: the list alone, nothing else ---- */
