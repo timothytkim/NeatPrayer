@@ -53,12 +53,10 @@ English  <Prayer Request 8/21/26>
 
 ```
 <2026-08-21 청년부 기도제목>
+<Prayer Requests (8/16/26)>
 
-• 홍길동: 새 학기를 앞두고 마음을 잘 준비할 수 있도록, 매일의 선택에서 하나님을 먼저 바라보게 되기를.
-
-• 김민수: 이번 주 가족들과 함께 예배드릴 수 있기를. 아버지 건강 회복을 위해 기도 부탁드립니다.
-
-• 이서연: 새로 시작하는 일터에서 좋은 사람들을 만나고, 그곳에서 선한 영향력을 끼칠 수 있도록.
+• Jihoon: That he would align his actions, life goals, and direction fully with God, keeping his eyes fixed steadfastly on Him.
+• David: That he would truly hunger for justice and peace in the world and devote himself to it wholeheartedly.
 ```
 
 ## Design
