@@ -28,9 +28,15 @@
       <p class="subline" data-i18n="subline"></p>
     </blockquote>
 
-    <div class="prop">
-      <label class="prop-key" for="dateInput" data-i18n="date"></label>
-      <input type="date" id="dateInput" class="prop-value" />
+    <div class="props">
+      <div class="prop">
+        <label class="prop-key" for="dateInput" data-i18n="date"></label>
+        <input type="date" id="dateInput" class="prop-value" />
+      </div>
+      <div class="prop">
+        <label class="prop-key" for="titleInput" data-i18n="title"></label>
+        <input type="text" id="titleInput" class="prop-value prop-text" data-ph="phTitle" autocomplete="off" />
+      </div>
     </div>
 
     <div class="table-wrap">
@@ -87,7 +93,12 @@
 
   <template id="personTemplate">
     <tr class="person">
-      <td class="col-no"><span class="person-index"></span></td>
+      <td class="col-no">
+        <div class="drag-handle" role="button" tabindex="0" data-aria="dragHandle">
+          <span class="grip" aria-hidden="true">⠿</span>
+          <span class="person-index"></span>
+        </div>
+      </td>
       <td class="col-name" data-label-key="name">
         <input type="text" class="name" data-ph="phName" autocomplete="off" />
       </td>
