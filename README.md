@@ -9,18 +9,31 @@ or sent anywhere.
 
 ## Use
 
-1. Pick the date (defaults to today).
+1. Pick the date (defaults to today) and, optionally, a title.
 2. Type each person's name and prayer request straight into the table cells.
    The **+ 인원 추가 / + Add Person** row at the bottom of the table adds another person;
    the ✕ on the right removes one (hidden when only one row is left).
-3. Press **만들기 / Submit** to render the formatted list.
-4. **복사 / Copy** puts it on the clipboard, or **PDF로 저장 / Save as PDF** opens the
-   print dialog with everything but the list stripped away.
-5. The callout at the bottom holds a standing invitation note with its own copy button.
+3. Reorder people by dragging the ⠿ handle in the 번호 / No. column — mouse or touch —
+   or by focusing a handle and pressing ↑ / ↓. Numbers renumber themselves as you go.
+4. Press **만들기 / Submit** to render the formatted list.
+5. **복사 / Copy** puts it on the clipboard, **PDF로 저장 / Save as PDF** opens the
+   print dialog with everything but the list stripped away, and
+   **이미지로 저장 / Save as Image** downloads the list as a PNG.
+6. The callout at the bottom holds a standing invitation note with its own copy button.
 
 Blank rows are skipped. A row with only one of the two fields filled is highlighted
 and blocks submission. A trailing `:` after a name is dropped so you never get `홍길동::`,
 and line breaks inside a request collapse to spaces so every bullet stays one line.
+
+## Title
+
+The 제목 / Title property is optional and goes into the header, in the right place for
+each language:
+
+```
+한국어   <2026-08-21 청년부 기도제목>      비우면  <2026-08-21 기도제목>
+English  <Youth Group Prayer Request 8/21/26>   blank   <Prayer Request 8/21/26>
+```
 
 ## Language
 
@@ -39,6 +52,7 @@ English  <Prayer Request 8/21/26>
 ## Output format
 
 ```
+<2026-08-21 청년부 기도제목>
 <Prayer Requests (8/16/26)>
 
 • Jihoon: That he would align his actions, life goals, and direction fully with God, keeping his eyes fixed steadfastly on Him.
@@ -82,5 +96,5 @@ Static site at the repo root — no build step.
 
 - `index.html` — markup, the person-row `<template>`, and `data-i18n` hooks
 - `style.css` — Notion-style layout, responsive rules, print sheet
-- `script.js` — i18n, add/remove rows, formatting, clipboard, print
+- `script.js` — i18n, add/remove/reorder rows, formatting, clipboard, print, image export
 - `netlify.toml` — publish directory

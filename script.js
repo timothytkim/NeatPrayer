@@ -6,6 +6,7 @@
       tagline: "모든 기도제목을, 가장 단정하게.",
       subline: "이름을 적고, 기도제목을 적고, 복사하면 끝.",
       date: "날짜",
+      title: "제목",
       no: "번호",
       name: "이름",
       request: "기도제목",
@@ -19,8 +20,10 @@
       noteTitle: "안내 문구",
       note: "오늘 못 오신 분들도 기도제목 있으시면 여기에 남겨주세요!\nPlease leave your prayer request here if you weren\u2019t here today!\n(수정해야할 부분 있으면 알려주세요…)",
       pdfName: "기도제목",
+      dragHandle: "끌어서 순서 변경",
       phName: "홍길동",
       phRequest: "기도제목을 입력하세요",
+      phTitle: "예: 청년부 (선택)",
       copied: "복사했습니다",
       needBoth: "이름과 기도제목을 모두 입력해주세요",
       needOne: "최소 한 명을 입력해주세요",
@@ -32,6 +35,7 @@
       tagline: "Every prayer request. Beautifully in line.",
       subline: "Write a name. Write a prayer. Copy it. Done.",
       date: "Date",
+      title: "Title",
       no: "No.",
       name: "Name",
       request: "Prayer Request",
@@ -45,8 +49,10 @@
       noteTitle: "Invitation Note",
       note: "Please leave your prayer request here if you weren\u2019t here today!\n(Let me know if anything needs to be fixed…)",
       pdfName: "Prayer Request",
+      dragHandle: "Drag to reorder",
       phName: "John Doe",
       phRequest: "Write the prayer request",
+      phTitle: "e.g. Youth Group (optional)",
       copied: "Copied",
       needBoth: "Fill in both the name and the prayer request",
       needOne: "Add at least one person",
@@ -68,6 +74,7 @@
   var outputCard = document.getElementById("outputCard");
   var outputEl = document.getElementById("output");
   var dateInput = document.getElementById("dateInput");
+  var titleInput = document.getElementById("titleInput");
   var toastEl = document.getElementById("toast");
   var langBtns = document.querySelectorAll(".lang-btn");
 
@@ -118,12 +125,15 @@
     return Number(parts[1]) + "/" + Number(parts[2]) + "/" + parts[0].slice(2);
   }
 
-  // en: <Prayer Request 8/16/26>   ko: <2026-08-16 기도제목>
+  // en: <Youth Group Prayer Request 8/16/26>   ko: <2026-08-16 청년부 기도제목>
+  // the title is optional; without it the header keeps its original shape
   function buildHeader() {
     var date = formatDate(dateInput.value || todayValue());
-    return lang === "ko"
-      ? "<" + date + " 기도제목>"
-      : "<Prayer Request " + date + ">";
+    var title = titleInput.value.trim().replace(/\s+/g, " ");
+    if (lang === "ko") {
+      return "<" + date + (title ? " " + title : "") + " 기도제목>";
+    }
+    return "<" + (title ? title + " " : "") + "Prayer Request " + date + ">";
   }
 
   function todayValue() {
@@ -165,6 +175,11 @@
       });
     });
     row.querySelector(".remove").setAttribute("aria-label", t("remove"));
+
+    var handle = row.querySelector(".drag-handle");
+    handle.setAttribute("aria-label", t("dragHandle"));
+    handle.addEventListener("pointerdown", startDrag);
+    handle.addEventListener("keydown", handleKeys);
     row.querySelectorAll("[data-label-key]").forEach(function (td) {
       td.setAttribute("data-label", t(td.dataset.labelKey));
     });
@@ -172,6 +187,76 @@
     peopleEl.appendChild(node);
     renumber();
     if (focus) peopleEl.lastElementChild.querySelector(".name").focus();
+  }
+
+  /* ---------- reorder (drag + keyboard) ---------- */
+
+  var drag = null;
+
+  function rowAt(y) {
+    var rows = peopleEl.querySelectorAll(".person");
+    for (var i = 0; i < rows.length; i++) {
+      var box = rows[i].getBoundingClientRect();
+      if (y >= box.top && y <= box.bottom) return rows[i];
+    }
+    return null;
+  }
+
+  function startDrag(e) {
+    if (e.button > 0) return;
+    if (peopleEl.querySelectorAll(".person").length < 2) return;
+
+    var handle = e.currentTarget;
+    var row = handle.closest(".person");
+
+    drag = { row: row, handle: handle, pointerId: e.pointerId };
+    handle.setPointerCapture(e.pointerId);
+    row.classList.add("dragging");
+    document.body.classList.add("dragging-row");
+
+    handle.addEventListener("pointermove", moveDrag);
+    handle.addEventListener("pointerup", endDrag);
+    handle.addEventListener("pointercancel", endDrag);
+    e.preventDefault();
+  }
+
+  function moveDrag(e) {
+    if (!drag) return;
+    var over = rowAt(e.clientY);
+    if (!over || over === drag.row) return;
+
+    var box = over.getBoundingClientRect();
+    var before = e.clientY < box.top + box.height / 2;
+    peopleEl.insertBefore(drag.row, before ? over : over.nextSibling);
+    renumber();
+  }
+
+  function endDrag() {
+    if (!drag) return;
+    drag.handle.removeEventListener("pointermove", moveDrag);
+    drag.handle.removeEventListener("pointerup", endDrag);
+    drag.handle.removeEventListener("pointercancel", endDrag);
+    drag.row.classList.remove("dragging");
+    document.body.classList.remove("dragging-row");
+    drag = null;
+  }
+
+  // the handle is focusable, so arrow keys move the row too
+  function handleKeys(e) {
+    if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+    var handle = e.currentTarget;
+    var row = handle.closest(".person");
+
+    if (e.key === "ArrowUp" && row.previousElementSibling) {
+      peopleEl.insertBefore(row, row.previousElementSibling);
+    } else if (e.key === "ArrowDown" && row.nextElementSibling) {
+      peopleEl.insertBefore(row.nextElementSibling, row);
+    } else {
+      return;
+    }
+    e.preventDefault();
+    renumber();
+    handle.focus();
   }
 
   /* ---------- output ---------- */
