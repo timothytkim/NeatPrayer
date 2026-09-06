@@ -81,11 +81,28 @@
     <section class="note">
       <div class="note-head">
         <h2 data-i18n="noteTitle"></h2>
-        <button type="button" id="noteCopyBtn" class="btn ghost sm" data-i18n="copy"></button>
       </div>
-      <div class="callout">
-        <span class="callout-icon">💬</span>
-        <pre id="noteText"></pre>
+
+      <div class="note-item">
+        <div class="note-item-head">
+          <span class="note-label" data-i18n="noteShort"></span>
+          <button type="button" id="noteCopyBtn" class="btn ghost sm" data-i18n="copy"></button>
+        </div>
+        <div class="callout">
+          <span class="callout-icon">💬</span>
+          <pre id="noteText"></pre>
+        </div>
+      </div>
+
+      <div class="note-item">
+        <div class="note-item-head">
+          <span class="note-label" data-i18n="noteLong"></span>
+          <button type="button" id="noteLongCopyBtn" class="btn ghost sm" data-i18n="copy"></button>
+        </div>
+        <div class="callout">
+          <span class="callout-icon">💛</span>
+          <pre id="noteLongText"></pre>
+        </div>
       </div>
     </section>
 

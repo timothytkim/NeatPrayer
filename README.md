@@ -19,7 +19,8 @@ or sent anywhere.
 5. **복사 / Copy** puts it on the clipboard, **PDF로 저장 / Save as PDF** opens the
    print dialog with everything but the list stripped away, and
    **이미지로 저장 / Save as Image** downloads the list as a PNG.
-6. The callout at the bottom holds a standing invitation note with its own copy button.
+6. The callouts at the bottom hold two standing invitation notes — a short one that
+   follows the language toggle, and a longer bilingual one — each with its own copy button.
 
 Blank rows are skipped. A row with only one of the two fields filled is highlighted
 and blocks submission. A trailing `:` after a name is dropped so you never get `홍길동::`,

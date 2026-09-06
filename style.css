@@ -371,6 +371,21 @@ pre#output {
 /* ---- note callout ---- */
 .note { margin-top: 46px; }
 
+.note-item + .note-item { margin-top: 22px; }
+
+.note-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.note-label {
+  font-size: 13px;
+  color: var(--gray);
+}
+
 .note-head {
   display: flex;
   justify-content: space-between;
@@ -399,8 +414,11 @@ pre#output {
 
 .callout-icon { font-size: 16px; line-height: 1.6; }
 
-pre#noteText {
+pre#noteText,
+pre#noteLongText {
   margin: 0;
+  flex: 1;
+  min-width: 0;
   white-space: pre-wrap;
   word-break: break-word;
   font-family: inherit;
@@ -506,7 +524,7 @@ pre#noteText {
   .note-head { gap: 10px; }
   .note-head .btn.sm { flex: 0 0 auto; }
 
-  pre#output, pre#noteText { font-size: 16px; }
+  pre#output, pre#noteText, pre#noteLongText { font-size: 16px; }
 
   .toast { left: 16px; right: 16px; bottom: 16px; transform: translateY(12px); text-align: center; }
   .toast.show { transform: translateY(0); }
