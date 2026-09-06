@@ -18,6 +18,8 @@
       image: "이미지로 저장",
       remove: "삭제",
       noteTitle: "안내 문구",
+      noteShort: "짧은 버전",
+      noteLong: "자세한 버전",
       note: "오늘 못 오신 분들도 기도제목 있으시면 여기에 남겨주세요!\nPlease leave your prayer request here if you weren\u2019t here today!\n(수정해야할 부분 있으면 알려주세요…)",
       pdfName: "기도제목",
       dragHandle: "끌어서 순서 변경",
@@ -47,6 +49,8 @@
       image: "Save as Image",
       remove: "Remove",
       noteTitle: "Invitation Note",
+      noteShort: "Short version",
+      noteLong: "Longer version",
       note: "Please leave your prayer request here if you weren\u2019t here today!\n(Let me know if anything needs to be fixed…)",
       pdfName: "Prayer Request",
       dragHandle: "Drag to reorder",
@@ -62,6 +66,18 @@
     }
   };
 
+  // bilingual on its own, so it stays the same in both languages
+  var NOTE_LONG = [
+    "기도제목 나눔 🙏",
+    "어떤 상황에 계시든, 오늘 함께하셨든 아니든 \u2014 여러분 한 분 한 분이 소중합니다. 마음에 담아두신 기도제목이 있으시면 편하게 여기에 남겨주세요. 잊지 않고 함께 기도하겠습니다 💛",
+    "",
+    "Prayer requests 🙏",
+    "Wherever you are and however you\u2019re doing \u2014 whether you were here today or not \u2014 each and every one of you matters to us. If there\u2019s something on your heart, please feel free to leave your prayer request here. We\u2019ll hold it with you in prayer 💛",
+    "",
+    "(수정하거나 추가할 부분 있으면 편하게 알려주세요!)",
+    "(Feel free to let us know if anything should be edited or added!)"
+  ].join("\n");
+
   var peopleEl = document.getElementById("people");
   var template = document.getElementById("personTemplate");
   var addBtn = document.getElementById("addBtn");
@@ -71,6 +87,8 @@
   var imgBtn = document.getElementById("imgBtn");
   var noteEl = document.getElementById("noteText");
   var noteCopyBtn = document.getElementById("noteCopyBtn");
+  var noteLongEl = document.getElementById("noteLongText");
+  var noteLongCopyBtn = document.getElementById("noteLongCopyBtn");
   var outputCard = document.getElementById("outputCard");
   var outputEl = document.getElementById("output");
   var dateInput = document.getElementById("dateInput");
@@ -588,6 +606,13 @@
     );
   });
 
+  noteLongCopyBtn.addEventListener("click", function () {
+    copyText(noteLongEl.textContent).then(
+      function () { showToast(t("copied")); },
+      function () { showToast(t("copyFail")); }
+    );
+  });
+
   noteCopyBtn.addEventListener("click", function () {
     copyText(noteEl.textContent).then(
       function () { showToast(t("copied")); },
@@ -630,6 +655,7 @@
 
   /* ---------- init ---------- */
 
+  noteLongEl.textContent = NOTE_LONG;
   applyLang("ko");
   dateInput.value = todayValue();
   addPerson(false);
