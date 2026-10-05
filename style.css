@@ -263,6 +263,57 @@ td textarea:focus {
 
 td.invalid-cell { background: var(--red-soft); }
 
+/* ---- a person's request lines ---- */
+.request-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.request-bullet {
+  display: none;
+  padding: 8px 0 8px 8px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--gray-light);
+}
+
+.request-list.multi .request-bullet { display: block; }
+
+.request-item .request { flex: 1; min-width: 0; }
+
+.request-remove {
+  border: none;
+  background: transparent;
+  color: var(--gray-light);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 10px 8px;
+  border-radius: 4px;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+
+.request-remove:hover:enabled { color: var(--red); background: var(--red-soft); }
+.request-remove:disabled { opacity: 0; cursor: default; pointer-events: none; }
+
+.request-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: var(--gray-light);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 4px 8px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.12s ease;
+}
+
+.request-add:hover { color: var(--red); }
+.request-add .plus { font-size: 14px; }
+
 .remove {
   border: none;
   background: transparent;
@@ -366,7 +417,7 @@ pre#output {
   padding: 16px 18px;
 }
 
-.output-tools { display: flex; gap: 6px; }
+.output-tools { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
 
 /* ---- note callout ---- */
 .note { margin-top: 46px; }

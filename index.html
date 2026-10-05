@@ -72,6 +72,7 @@
         <div class="output-tools">
           <button type="button" id="pdfBtn" class="btn ghost sm" data-i18n="pdf"></button>
           <button type="button" id="imgBtn" class="btn ghost sm" data-i18n="image"></button>
+          <button type="button" id="mdBtn" class="btn ghost sm" data-i18n="md"></button>
           <button type="button" id="copyBtn" class="btn primary sm" data-i18n="copy"></button>
         </div>
       </div>
@@ -120,12 +121,23 @@
         <input type="text" class="name" data-ph="phName" autocomplete="off" />
       </td>
       <td class="col-req" data-label-key="request">
-        <textarea class="request" rows="1" data-ph="phRequest"></textarea>
+        <div class="request-list"></div>
+        <button type="button" class="request-add">
+          <span class="plus" aria-hidden="true">+</span><span data-i18n="addRequest"></span>
+        </button>
       </td>
       <td class="col-del">
         <button type="button" class="remove" data-aria="remove">&times;</button>
       </td>
     </tr>
+  </template>
+
+  <template id="requestTemplate">
+    <div class="request-item">
+      <span class="request-bullet" aria-hidden="true">–</span>
+      <textarea class="request" rows="1" data-ph="phRequest"></textarea>
+      <button type="button" class="request-remove" data-aria="removeRequest">&times;</button>
+    </div>
   </template>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
