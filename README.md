@@ -15,11 +15,15 @@ or sent anywhere.
    the ✕ on the right removes one (hidden when only one row is left).
 3. Reorder people by dragging the ⠿ handle in the 번호 / No. column — mouse or touch —
    or by focusing a handle and pressing ↑ / ↓. Numbers renumber themselves as you go.
-4. Press **만들기 / Submit** to render the formatted list.
-5. **복사 / Copy** puts it on the clipboard, **PDF로 저장 / Save as PDF** opens the
-   print dialog with everything but the list stripped away, and
-   **이미지로 저장 / Save as Image** downloads the list as a PNG.
-6. The callouts at the bottom hold two standing invitation notes — a short one that
+4. A person can carry several prayer requests — **+ 기도제목 추가 / + Add request**
+   adds another line, and Enter inside a line starts the next one (Shift+Enter still
+   breaks the line). Empty extra lines are dropped.
+5. Press **만들기 / Submit** to render the formatted list.
+6. **복사 / Copy** puts it on the clipboard, **마크다운 복사 / Copy as Markdown** copies it
+   as Markdown to paste into Notion, **PDF로 저장 / Save as PDF** opens the print dialog
+   with everything but the list stripped away, and **이미지로 저장 / Save as Image**
+   downloads the list as a PNG.
+7. The callouts at the bottom hold two standing invitation notes — a short one that
    follows the language toggle, and a longer bilingual one — each with its own copy button.
 
 Blank rows are skipped. A row with only one of the two fields filled is highlighted
@@ -52,12 +56,31 @@ English  <Prayer Request 8/21/26>
 
 ## Output format
 
+One request stays on the person's own line; several become sub-bullets under the name.
+
 ```
 <2026-08-21 청년부 기도제목>
 <Prayer Requests (8/16/26)>
 
 • Jihoon: That he would align his actions, life goals, and direction fully with God, keeping his eyes fixed steadfastly on Him.
 • David: That he would truly hunger for justice and peace in the world and devote himself to it wholeheartedly.
+```
+
+## Markdown
+
+**마크다운 복사 / Copy as Markdown** copies the same list as Markdown — H1 for the header,
+H2 per person, a bullet per request — so pasting into Notion lands as real headings and
+bullets instead of plain text.
+
+```markdown
+# 2026-08-21 청년부 기도제목
+
+## 홍길동
+- 새 학기를 앞두고 마음을 잘 준비할 수 있도록.
+- 아버지 건강 회복을 위해.
+
+## 김민수
+- 새로 시작하는 일터에서 좋은 사람들을 만나기를.
 ```
 
 ## Design

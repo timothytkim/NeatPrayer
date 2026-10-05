@@ -14,6 +14,7 @@
       submit: "만들기",
       output: "결과",
       copy: "복사",
+      md: "마크다운 복사",
       pdf: "PDF로 저장",
       image: "이미지로 저장",
       remove: "삭제",
@@ -23,10 +24,13 @@
       note: "오늘 못 오신 분들도 기도제목 있으시면 여기에 남겨주세요!\nPlease leave your prayer request here if you weren\u2019t here today!\n(수정해야할 부분 있으면 알려주세요…)",
       pdfName: "기도제목",
       dragHandle: "끌어서 순서 변경",
+      addRequest: "기도제목 추가",
+      removeRequest: "기도제목 삭제",
       phName: "홍길동",
       phRequest: "기도제목을 입력하세요",
       phTitle: "예: 청년부 (선택)",
       copied: "복사했습니다",
+      copiedMd: "마크다운으로 복사했습니다",
       needBoth: "이름과 기도제목을 모두 입력해주세요",
       needOne: "최소 한 명을 입력해주세요",
       copyFail: "복사에 실패했어요. 직접 선택해서 복사해주세요",
@@ -45,6 +49,7 @@
       submit: "Submit",
       output: "Output",
       copy: "Copy",
+      md: "Copy as Markdown",
       pdf: "Save as PDF",
       image: "Save as Image",
       remove: "Remove",
@@ -54,10 +59,13 @@
       note: "Please leave your prayer request here if you weren\u2019t here today!\n(Let me know if anything needs to be fixed…)",
       pdfName: "Prayer Request",
       dragHandle: "Drag to reorder",
+      addRequest: "Add request",
+      removeRequest: "Remove request",
       phName: "John Doe",
       phRequest: "Write the prayer request",
       phTitle: "e.g. Youth Group (optional)",
       copied: "Copied",
+      copiedMd: "Copied as Markdown",
       needBoth: "Fill in both the name and the prayer request",
       needOne: "Add at least one person",
       copyFail: "Copy failed — select the text manually",
@@ -83,6 +91,8 @@
   var addBtn = document.getElementById("addBtn");
   var submitBtn = document.getElementById("submitBtn");
   var copyBtn = document.getElementById("copyBtn");
+  var mdBtn = document.getElementById("mdBtn");
+  var requestTemplate = document.getElementById("requestTemplate");
   var pdfBtn = document.getElementById("pdfBtn");
   var imgBtn = document.getElementById("imgBtn");
   var noteEl = document.getElementById("noteText");
@@ -106,22 +116,27 @@
 
   /* ---------- language ---------- */
 
+  // Walks a subtree and fills in every localized string it finds.
+  function localize(root) {
+    root.querySelectorAll("[data-i18n]").forEach(function (el) {
+      el.textContent = t(el.dataset.i18n);
+    });
+    root.querySelectorAll("[data-ph]").forEach(function (el) {
+      el.placeholder = t(el.dataset.ph);
+    });
+    root.querySelectorAll("[data-aria]").forEach(function (el) {
+      el.setAttribute("aria-label", t(el.dataset.aria));
+    });
+    root.querySelectorAll("[data-label-key]").forEach(function (el) {
+      el.setAttribute("data-label", t(el.dataset.labelKey));
+    });
+  }
+
   function applyLang(next) {
     lang = next;
     document.documentElement.lang = next;
 
-    document.querySelectorAll("[data-i18n]").forEach(function (el) {
-      el.textContent = t(el.dataset.i18n);
-    });
-    document.querySelectorAll("[data-ph]").forEach(function (el) {
-      el.placeholder = t(el.dataset.ph);
-    });
-    document.querySelectorAll("[data-aria]").forEach(function (el) {
-      el.setAttribute("aria-label", t(el.dataset.aria));
-    });
-    document.querySelectorAll("[data-label-key]").forEach(function (el) {
-      el.setAttribute("data-label", t(el.dataset.labelKey));
-    });
+    localize(document);
     langBtns.forEach(function (btn) {
       btn.setAttribute("aria-pressed", String(btn.dataset.lang === next));
     });
@@ -145,13 +160,17 @@
 
   // en: <Youth Group Prayer Request 8/16/26>   ko: <2026-08-16 청년부 기도제목>
   // the title is optional; without it the header keeps its original shape
-  function buildHeader() {
+  function buildTitleText() {
     var date = formatDate(dateInput.value || todayValue());
     var title = titleInput.value.trim().replace(/\s+/g, " ");
     if (lang === "ko") {
-      return "<" + date + (title ? " " + title : "") + " 기도제목>";
+      return date + (title ? " " + title : "") + " 기도제목";
     }
-    return "<" + (title ? title + " " : "") + "Prayer Request " + date + ">";
+    return (title ? title + " " : "") + "Prayer Request " + date;
+  }
+
+  function buildHeader() {
+    return "<" + buildTitleText() + ">";
   }
 
   function todayValue() {
@@ -185,26 +204,65 @@
       renumber();
     });
 
-    row.querySelectorAll("input, textarea").forEach(function (field) {
-      field.placeholder = t(field.dataset.ph);
-      field.addEventListener("input", function () {
-        field.closest("td").classList.remove("invalid-cell");
-        if (field.tagName === "TEXTAREA") autoGrow(field);
-      });
+    var nameField = row.querySelector(".name");
+    nameField.addEventListener("input", function () {
+      nameField.closest("td").classList.remove("invalid-cell");
     });
-    row.querySelector(".remove").setAttribute("aria-label", t("remove"));
+
+    row.querySelector(".request-add").addEventListener("click", function () {
+      addRequest(row, true);
+    });
 
     var handle = row.querySelector(".drag-handle");
-    handle.setAttribute("aria-label", t("dragHandle"));
     handle.addEventListener("pointerdown", startDrag);
     handle.addEventListener("keydown", handleKeys);
-    row.querySelectorAll("[data-label-key]").forEach(function (td) {
-      td.setAttribute("data-label", t(td.dataset.labelKey));
-    });
 
     peopleEl.appendChild(node);
+    localize(row);
+    addRequest(row, false);
     renumber();
-    if (focus) peopleEl.lastElementChild.querySelector(".name").focus();
+    if (focus) nameField.focus();
+  }
+
+  /* ---------- requests (one person can have several) ---------- */
+
+  // The ✕ on a single remaining line is hidden, and the – bullets only
+  // show up once a person actually has more than one request.
+  function refreshRequests(row) {
+    var items = row.querySelectorAll(".request-item");
+    row.querySelector(".request-list").classList.toggle("multi", items.length > 1);
+    items.forEach(function (item) {
+      item.querySelector(".request-remove").disabled = items.length === 1;
+    });
+  }
+
+  function addRequest(row, focus) {
+    var node = requestTemplate.content.cloneNode(true);
+    var item = node.querySelector(".request-item");
+    var field = item.querySelector(".request");
+
+    item.querySelector(".request-remove").addEventListener("click", function () {
+      item.remove();
+      refreshRequests(row);
+    });
+
+    field.addEventListener("input", function () {
+      field.closest("td").classList.remove("invalid-cell");
+      autoGrow(field);
+    });
+
+    // Enter starts the next request; Shift+Enter still breaks the line
+    field.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        addRequest(row, true);
+      }
+    });
+
+    row.querySelector(".request-list").appendChild(node);
+    localize(item);
+    refreshRequests(row);
+    if (focus) field.focus();
   }
 
   /* ---------- reorder (drag + keyboard) ---------- */
@@ -286,23 +344,51 @@
 
     rows.forEach(function (row) {
       var nameField = row.querySelector(".name");
-      var requestField = row.querySelector(".request");
+      var requestFields = Array.prototype.slice.call(row.querySelectorAll(".request"));
       var name = nameField.value.trim().replace(/[:：]\s*$/, "");
-      var request = requestField.value.trim().replace(/\s*\n\s*/g, " ");
+      var requests = [];
 
-      if (!name && !request) return; // skip blank rows
+      requestFields.forEach(function (field) {
+        var request = field.value.trim().replace(/\s*\n\s*/g, " ");
+        if (request) requests.push(request); // empty extra lines just drop out
+      });
+
+      if (!name && !requests.length) return; // skip blank rows
 
       if (!name) { nameField.closest("td").classList.add("invalid-cell"); hasError = true; }
-      if (!request) { requestField.closest("td").classList.add("invalid-cell"); hasError = true; }
-      if (name && request) entries.push({ name: name, request: request });
+      if (!requests.length) {
+        requestFields[0].closest("td").classList.add("invalid-cell");
+        hasError = true;
+      }
+      if (name && requests.length) entries.push({ name: name, requests: requests });
     });
 
     if (hasError) { if (!silent) showToast(t("needBoth")); return null; }
     if (!entries.length) { if (!silent) showToast(t("needOne")); return null; }
 
-    var bullets = entries.map(function (e) { return "• " + e.name + ": " + e.request; });
+    var bullets = entries.map(function (e) {
+      if (e.requests.length === 1) return "• " + e.name + ": " + e.requests[0];
+      return "• " + e.name + "\n" + e.requests.map(function (r) {
+        return "   – " + r;
+      }).join("\n");
+    });
     lastEntries = entries;
     return buildHeader() + "\n\n" + bullets.join("\n\n");
+  }
+
+  /* ---------- markdown (paste straight into Notion) ---------- */
+
+  // H1 for the list, H2 per person, a bullet per request.
+  function buildMarkdown(entries) {
+    var lines = ["# " + buildTitleText(), ""];
+    entries.forEach(function (entry, i) {
+      lines.push("## " + entry.name);
+      entry.requests.forEach(function (request) {
+        lines.push("- " + request);
+      });
+      if (i < entries.length - 1) lines.push("");
+    });
+    return lines.join("\n");
   }
 
   function showToast(message) {
@@ -342,6 +428,7 @@
     height: 1920,
     pad: 90,
     indent: 40,
+    subIndent: 34,
     footer: 90,
     maxFont: 42,
     minFont: 34,   // floor while trying to keep everything on one page
@@ -400,7 +487,23 @@
 
     ctx.font = "400 " + size + "px " + IMG.family;
     var blocks = entries.map(function (entry) {
-      var lines = wrapText(ctx, entry.name + ": " + entry.request, textWidth - IMG.indent);
+      var lines = [];
+
+      function push(text, indent) {
+        wrapText(ctx, text, textWidth - indent).forEach(function (line) {
+          lines.push({ text: line, indent: indent });
+        });
+      }
+
+      if (entry.requests.length === 1) {
+        push(entry.name + ": " + entry.requests[0], IMG.indent);
+      } else {
+        push(entry.name, IMG.indent);
+        entry.requests.forEach(function (request) {
+          push("– " + request, IMG.indent + IMG.subIndent);
+        });
+      }
+
       return { lines: lines, height: lines.length * lineHeight };
     });
 
@@ -475,7 +578,7 @@
 
       ctx.fillStyle = "#000000";
       block.lines.forEach(function (line) {
-        ctx.fillText(line, IMG.pad + IMG.indent, y);
+        ctx.fillText(line.text, IMG.pad + line.indent, y);
         y += plan.lineHeight;
       });
       if (i < blocks.length - 1) y += plan.gap;
@@ -602,6 +705,16 @@
   copyBtn.addEventListener("click", function () {
     copyText(outputEl.textContent).then(
       function () { showToast(t("copied")); },
+      function () { showToast(t("copyFail")); }
+    );
+  });
+
+  mdBtn.addEventListener("click", function () {
+    var text = buildOutput(); // re-reads the table, so edits after Submit come along
+    if (text === null) return;
+    outputEl.textContent = text;
+    copyText(buildMarkdown(lastEntries)).then(
+      function () { showToast(t("copiedMd")); },
       function () { showToast(t("copyFail")); }
     );
   });
